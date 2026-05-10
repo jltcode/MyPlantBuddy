@@ -108,7 +108,7 @@ export default function HomeScreen() {
 			>
 				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 					<View style={styles.headerRow}>
-						<Text style={styles.pageTitle}>Mon Jardin Connecté</Text>
+						<Text style={styles.pageTitle}>Mon jardin Connecté</Text>
 						<View style={styles.headerActions}>
 							<TouchableOpacity activeOpacity={0.85} style={styles.roundButton}>
 								<Ionicons name="add" size={20} color="#174D38" />
@@ -124,7 +124,7 @@ export default function HomeScreen() {
 
 					<View style={styles.statusBanner}>
 						<Ionicons name="sunny" size={18} color="#E2AA31" />
-						<Text style={styles.statusText}>Toutes vos plantes vont bien aujourd hui.</Text>
+						<Text style={styles.statusText}>Toutes vos plantes vont bien aujourd&apos;hui.</Text>
 					</View>
 
 					{plants.map((plant, index) => (

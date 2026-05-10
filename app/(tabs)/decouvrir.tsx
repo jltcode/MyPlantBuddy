@@ -5,7 +5,7 @@ export default function DecouvrirScreen() {
 	return (
 		<SafeAreaView style={styles.safeArea}>
 			<View style={styles.content}>
-				<Text style={styles.title}>Decouvrir</Text>
+				<Text style={styles.title}>Découvrir</Text>
 				<Text style={styles.description}>Conseils et plantes suggerées selon ton jardin.</Text>
 			</View>
 		</SafeAreaView>
