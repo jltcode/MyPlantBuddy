@@ -1,1 +1,1 @@
-export { ExploreScreen as default } from '@/features/explore';
+export { ExploreScreen as default } from '@/features/explore/screens/explore-container';

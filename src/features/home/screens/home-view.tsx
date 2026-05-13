@@ -1,11 +1,10 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useEffect, useRef } from "react";
-import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View, type ViewProps } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Fonts } from "@/theme";
+import { Fonts } from "@/theme/theme";
 
-type Plant = {
+export type Plant = {
 	id: string;
 	name: string;
 	waterLevel: number;
@@ -15,18 +14,10 @@ type Plant = {
 	warningLabel?: string;
 };
 
-const plants: Plant[] = [
-	{ id: "ficus", name: "Ficus", waterLevel: 0.62, lightLevel: 0.5, mood: "happy", ctaLabel: "Arroser" },
-	{
-		id: "monstera",
-		name: "Monstera",
-		waterLevel: 0.72,
-		lightLevel: 0.55,
-		mood: "warning",
-		warningLabel: "SOS Eau !",
-	},
-	{ id: "succulente", name: "Succulente", waterLevel: 0.4, lightLevel: 0.35, mood: "happy" },
-];
+export type HomeViewProps = {
+	plants: Plant[];
+	contentAnimatedStyle: NonNullable<Animated.AnimatedProps<ViewProps>["style"]>;
+};
 
 function ProgressRow({
 	icon,
@@ -77,35 +68,12 @@ function PlantCard({ plant, featured }: { plant: Plant; featured?: boolean }) {
 	);
 }
 
-export function HomeScreen() {
-	const entranceAnim = useRef(new Animated.Value(0)).current;
-
-	useEffect(() => {
-		Animated.timing(entranceAnim, {
-			toValue: 1,
-			duration: 550,
-			useNativeDriver: true,
-		}).start();
-	}, [entranceAnim]);
-
+export function HomeView({ plants, contentAnimatedStyle }: HomeViewProps) {
 	return (
 		<SafeAreaView style={styles.safeArea}>
 			<View pointerEvents="none" style={[styles.blob, styles.blobLeft]} />
 			<View pointerEvents="none" style={[styles.blob, styles.blobRight]} />
-			<Animated.View
-				style={{
-					flex: 1,
-					opacity: entranceAnim,
-					transform: [
-						{
-							translateY: entranceAnim.interpolate({
-								inputRange: [0, 1],
-								outputRange: [22, 0],
-							}),
-						},
-					],
-				}}
-			>
+			<Animated.View style={[{ flex: 1 }, contentAnimatedStyle]}>
 				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 					<View style={styles.headerRow}>
 						<Text style={styles.pageTitle}>Mon jardin Connecté</Text>

@@ -1,12 +1,20 @@
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export function DiscoverScreen() {
+export type CenteredMessageScreenProps = {
+	title: string;
+	description: string;
+};
+
+/**
+ * Layout partagé : fond vert clair, titre + texte centrés (écrans placeholder / onboarding).
+ */
+export function CenteredMessageScreen({ title, description }: CenteredMessageScreenProps) {
 	return (
 		<SafeAreaView style={styles.safeArea}>
 			<View style={styles.content}>
-				<Text style={styles.title}>Découvrir</Text>
-				<Text style={styles.description}>Conseils et plantes suggerées selon ton jardin.</Text>
+				<Text style={styles.title}>{title}</Text>
+				<Text style={styles.description}>{description}</Text>
 			</View>
 		</SafeAreaView>
 	);

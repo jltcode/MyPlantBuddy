@@ -1,1 +1,1 @@
-export { JournalScreen as default } from '@/features/journal';
+export { JournalScreen as default } from '@/features/journal/screens/journal-container';
