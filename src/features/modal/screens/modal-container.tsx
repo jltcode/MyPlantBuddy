@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { StyleSheet } from "react-native";
+import { YStack } from "tamagui";
 
 import { ThemedText } from "@/components/themed-text";
 
@@ -15,17 +15,12 @@ export function ModalScreen() {
 		<ModalView
 			title={COPY.title}
 			footer={
-				<Link href="/" dismissTo style={styles.link}>
-					<ThemedText type="link">{COPY.linkLabel}</ThemedText>
-				</Link>
+				<YStack marginTop="$4" paddingVertical="$3">
+					<Link href="/" dismissTo>
+						<ThemedText type="link">{COPY.linkLabel}</ThemedText>
+					</Link>
+				</YStack>
 			}
 		/>
 	);
 }
-
-const styles = StyleSheet.create({
-	link: {
-		marginTop: 15,
-		paddingVertical: 15,
-	},
-});

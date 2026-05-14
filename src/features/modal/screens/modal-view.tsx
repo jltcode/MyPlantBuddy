@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
-import { StyleSheet } from "react-native";
+import { YStack } from "tamagui";
 
 import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
 
 export type ModalViewProps = {
 	title: string;
@@ -11,18 +10,9 @@ export type ModalViewProps = {
 
 export function ModalView({ title, footer }: ModalViewProps) {
 	return (
-		<ThemedView style={styles.container}>
+		<YStack flex={1} alignItems="center" justifyContent="center" padding="$5" backgroundColor="$background">
 			<ThemedText type="title">{title}</ThemedText>
 			{footer}
-		</ThemedView>
+		</YStack>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-		padding: 20,
-	},
-});

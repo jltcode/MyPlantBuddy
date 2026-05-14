@@ -1,12 +1,12 @@
 import { Image } from "expo-image";
 import type { ImageSource } from "expo-image";
 import { Platform, StyleSheet } from "react-native";
+import { XStack } from "tamagui";
 
 import { Collapsible } from "@/components/ui/collapsible";
 import { ExternalLink } from "@/components/external-link";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Fonts } from "@/theme/theme";
 
@@ -26,7 +26,7 @@ export function ExploreView({ reactLogoSource }: ExploreViewProps) {
 					style={styles.headerImage}
 				/>
 			}>
-			<ThemedView style={styles.titleContainer}>
+			<XStack flexDirection="row" gap="$2">
 				<ThemedText
 					type="title"
 					style={{
@@ -34,7 +34,7 @@ export function ExploreView({ reactLogoSource }: ExploreViewProps) {
 					}}>
 					Explore
 				</ThemedText>
-			</ThemedView>
+			</XStack>
 			<ThemedText>This app includes example code to help you get started.</ThemedText>
 			<Collapsible title="File-based routing">
 				<ThemedText>
@@ -104,9 +104,5 @@ const styles = StyleSheet.create({
 		bottom: -90,
 		left: -35,
 		position: "absolute",
-	},
-	titleContainer: {
-		flexDirection: "row",
-		gap: 8,
 	},
 });

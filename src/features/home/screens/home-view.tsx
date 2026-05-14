@@ -1,8 +1,11 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View, type ViewProps } from "react-native";
+import { Animated, View, type ViewProps } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, ScrollView, Text, XStack, YStack } from "tamagui";
 
+import { scrollScreenContentStyle } from "@/helpers/tamagui";
 import { Fonts } from "@/theme/theme";
+import { plantPalette } from "@/theme/plant-palette";
 
 export type Plant = {
 	id: string;
@@ -28,72 +31,186 @@ function ProgressRow({
 	value: number;
 	fillColor: string;
 }) {
+	const widthPercent = Math.max(8, value * 100);
 	return (
-		<View style={styles.progressRow}>
-			<Ionicons name={icon} size={18} color="#4F9F86" />
-			<View style={styles.progressTrack}>
+		<XStack alignItems="center" gap="$3">
+			<Ionicons name={icon} size={18} color={plantPalette.iconTeal} />
+			<YStack
+				flex={1}
+				backgroundColor={plantPalette.progressTrackBg}
+				borderWidth={1.6}
+				borderColor={plantPalette.cardBorder}
+				borderRadius={999}
+				height={19}
+				overflow="hidden">
 				<View
-					style={[styles.progressFill, { width: `${Math.max(8, value * 100)}%`, backgroundColor: fillColor }]}
+					style={{
+						width: `${widthPercent}%`,
+						height: "100%",
+						borderRadius: 999,
+						backgroundColor: fillColor,
+					}}
 				/>
-			</View>
-		</View>
+			</YStack>
+		</XStack>
 	);
 }
 
 function PlantCard({ plant, featured }: { plant: Plant; featured?: boolean }) {
 	return (
-		<View style={styles.card}>
-			<View style={styles.cardTopRow}>
-				<Text style={styles.cardTitle}>{plant.name}</Text>
-				{plant.warningLabel ? <Text style={styles.warningPill}>{plant.warningLabel}</Text> : null}
-			</View>
+		<YStack
+			backgroundColor={plantPalette.cardSurface}
+			borderRadius={24}
+			padding="$4"
+			shadowColor={plantPalette.shadow}
+			shadowOpacity={0.1}
+			shadowRadius={18}
+			shadowOffset={{ width: 0, height: 10 }}
+			elevation={5}>
+			<XStack alignItems="center" justifyContent="space-between" marginBottom="$3.5">
+				<Text
+					color={plantPalette.gardenTextDeep}
+					fontSize={24}
+					fontWeight="800"
+					fontFamily={Fonts.rounded}
+					maxWidth="70%">
+					{plant.name}
+				</Text>
+				{plant.warningLabel ? (
+					<Text
+						backgroundColor={plantPalette.warningRed}
+						color="#FFFFFF"
+						fontWeight="800"
+						fontSize={14}
+						paddingHorizontal="$3"
+						paddingVertical="$1.5"
+						borderRadius={12}>
+						{plant.warningLabel}
+					</Text>
+				) : null}
+			</XStack>
 
-			<View style={styles.cardBody}>
-				<View style={styles.cardMetrics}>
-					<ProgressRow icon="water-outline" value={plant.waterLevel} fillColor="#43A9DB" />
-					<ProgressRow icon="sunny-outline" value={plant.lightLevel} fillColor="#F0C34E" />
-				</View>
+			<XStack alignItems="center" justifyContent="space-between" gap="$4">
+				<YStack flex={1} gap="$3">
+					<ProgressRow icon="water-outline" value={plant.waterLevel} fillColor={plantPalette.waterBlue} />
+					<ProgressRow icon="sunny-outline" value={plant.lightLevel} fillColor={plantPalette.sunYellow} />
+				</YStack>
 
-				<View style={[styles.avatarCircle, plant.mood === "warning" ? styles.avatarWarning : null]}>
-					<Ionicons name="leaf" size={38} color="#3A874B" />
-				</View>
-			</View>
+				<YStack
+					width={106}
+					height={106}
+					borderRadius={53}
+					backgroundColor={plant.mood === "warning" ? plantPalette.warningAvatarBg : plantPalette.avatarLeaf}
+					alignItems="center"
+					justifyContent="center">
+					<Ionicons name="leaf" size={38} color={plantPalette.iconTeal} />
+				</YStack>
+			</XStack>
 
 			{featured && plant.ctaLabel ? (
-				<TouchableOpacity activeOpacity={0.85} style={styles.primaryButton}>
-					<Text style={styles.primaryButtonText}>{plant.ctaLabel}</Text>
-				</TouchableOpacity>
+				<Button
+					marginTop="$4"
+					backgroundColor={plantPalette.primaryGreen}
+					borderRadius={999}
+					borderWidth={4}
+					borderColor={plantPalette.primaryGreenBorder}
+					paddingVertical={13}
+					pressStyle={{ opacity: 0.92 }}>
+					<Text color="#FFFFFF" fontSize={22} fontWeight="800" fontFamily={Fonts.rounded}>
+						{plant.ctaLabel}
+					</Text>
+				</Button>
 			) : null}
-		</View>
+		</YStack>
 	);
 }
 
 export function HomeView({ plants, contentAnimatedStyle }: HomeViewProps) {
-	return (
-		<SafeAreaView style={styles.safeArea}>
-			<View pointerEvents="none" style={[styles.blob, styles.blobLeft]} />
-			<View pointerEvents="none" style={[styles.blob, styles.blobRight]} />
-			<Animated.View style={[{ flex: 1 }, contentAnimatedStyle]}>
-				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-					<View style={styles.headerRow}>
-						<Text style={styles.pageTitle}>Mon jardin Connecté</Text>
-						<View style={styles.headerActions}>
-							<TouchableOpacity activeOpacity={0.85} style={styles.roundButton}>
-								<Ionicons name="add" size={20} color="#174D38" />
-							</TouchableOpacity>
-							<TouchableOpacity activeOpacity={0.85} style={styles.roundButton}>
-								<Ionicons name="notifications" size={18} color="#174D38" />
-								<View style={styles.badge}>
-									<Text style={styles.badgeText}>2</Text>
-								</View>
-							</TouchableOpacity>
-						</View>
-					</View>
+	const scrollPad = scrollScreenContentStyle();
 
-					<View style={styles.statusBanner}>
-						<Ionicons name="sunny" size={18} color="#E2AA31" />
-						<Text style={styles.statusText}>Toutes vos plantes vont bien aujourd&apos;hui.</Text>
-					</View>
+	return (
+		<SafeAreaView style={{ flex: 1, backgroundColor: plantPalette.gardenBackground }}>
+			<YStack pointerEvents="none" position="absolute" borderRadius={999} backgroundColor={plantPalette.gardenBlob} width={280} height={280} top={-120} left={-90} />
+			<YStack
+				pointerEvents="none"
+				position="absolute"
+				borderRadius={999}
+				backgroundColor={plantPalette.gardenBlob}
+				width={220}
+				height={220}
+				top={260}
+				right={-120}
+				opacity={0.65}
+			/>
+			<Animated.View style={[{ flex: 1 }, contentAnimatedStyle]}>
+				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={scrollPad}>
+					<XStack alignItems="center" justifyContent="space-between" marginTop="$1.5">
+						<Text
+							fontSize={34}
+							lineHeight={40}
+							fontWeight="800"
+							fontFamily={Fonts.rounded}
+							color={plantPalette.gardenText}
+							flex={1}
+							maxWidth="74%">
+							Mon jardin Connecté
+						</Text>
+						<XStack alignItems="center" gap="$2.5">
+							<Button
+								circular
+								size="$3"
+								chromeless
+								borderWidth={2}
+								borderColor={plantPalette.roundButtonBorder}
+								backgroundColor={plantPalette.roundButtonBg}
+								icon={<Ionicons name="add" size={20} color={plantPalette.roundButtonIcon} />}
+								pressStyle={{ opacity: 0.85 }}
+								onPress={() => undefined}
+							/>
+							<YStack position="relative">
+								<Button
+									circular
+									size="$3"
+									chromeless
+									borderWidth={2}
+									borderColor={plantPalette.roundButtonBorder}
+									backgroundColor={plantPalette.roundButtonBg}
+									icon={<Ionicons name="notifications" size={18} color={plantPalette.roundButtonIcon} />}
+									pressStyle={{ opacity: 0.85 }}
+									onPress={() => undefined}
+								/>
+								<YStack
+									pointerEvents="none"
+									position="absolute"
+									top={-4}
+									right={-5}
+									minWidth={18}
+									height={18}
+									borderRadius={9}
+									backgroundColor={plantPalette.badgeRed}
+									alignItems="center"
+									justifyContent="center"
+									paddingHorizontal={4}>
+									<Text color="#FFFFFF" fontSize={11} fontWeight="700">
+										2
+									</Text>
+								</YStack>
+							</YStack>
+						</XStack>
+					</XStack>
+
+					<XStack
+						backgroundColor={plantPalette.statusBannerBg}
+						borderRadius={18}
+						paddingHorizontal="$3.5"
+						paddingVertical="$3.5"
+						alignItems="center"
+						gap="$2.5">
+						<Ionicons name="sunny" size={18} color={plantPalette.sunIcon} />
+						<Text color={plantPalette.gardenTextMuted} fontSize={17} fontWeight="600" fontFamily={Fonts.sans} flex={1}>
+							Toutes vos plantes vont bien aujourd&apos;hui.
+						</Text>
+					</XStack>
 
 					{plants.map((plant, index) => (
 						<PlantCard key={plant.id} plant={plant} featured={index === 0} />
@@ -103,184 +220,3 @@ export function HomeView({ plants, contentAnimatedStyle }: HomeViewProps) {
 		</SafeAreaView>
 	);
 }
-
-const styles = StyleSheet.create({
-	safeArea: {
-		flex: 1,
-		backgroundColor: "#E8F2EC",
-	},
-	blob: {
-		position: "absolute",
-		borderRadius: 999,
-		backgroundColor: "#D6EAD9",
-	},
-	blobLeft: {
-		width: 280,
-		height: 280,
-		top: -120,
-		left: -90,
-	},
-	blobRight: {
-		width: 220,
-		height: 220,
-		top: 260,
-		right: -120,
-		opacity: 0.65,
-	},
-	scrollContent: {
-		paddingHorizontal: 18,
-		paddingTop: 14,
-		paddingBottom: 24,
-		gap: 14,
-	},
-	headerRow: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		marginTop: 6,
-	},
-	pageTitle: {
-		fontSize: 34,
-		lineHeight: 40,
-		fontWeight: "800",
-		fontFamily: Fonts.rounded,
-		color: "#123D2D",
-		flex: 1,
-		maxWidth: "74%",
-	},
-	headerActions: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 10,
-	},
-	roundButton: {
-		width: 42,
-		height: 42,
-		borderRadius: 21,
-		borderWidth: 2,
-		borderColor: "#29634A",
-		backgroundColor: "#EAF5EF",
-		alignItems: "center",
-		justifyContent: "center",
-		position: "relative",
-	},
-	badge: {
-		position: "absolute",
-		top: -4,
-		right: -5,
-		minWidth: 18,
-		height: 18,
-		borderRadius: 9,
-		backgroundColor: "#F2554C",
-		alignItems: "center",
-		justifyContent: "center",
-		paddingHorizontal: 4,
-	},
-	badgeText: {
-		color: "#FFFFFF",
-		fontSize: 11,
-		fontWeight: "700",
-	},
-	statusBanner: {
-		backgroundColor: "#E3EFE6",
-		borderRadius: 18,
-		paddingHorizontal: 14,
-		paddingVertical: 14,
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 10,
-	},
-	statusText: {
-		color: "#204836",
-		fontSize: 17,
-		fontWeight: "600",
-		fontFamily: Fonts.sans,
-		flex: 1,
-	},
-	card: {
-		backgroundColor: "#EAF3EE",
-		borderRadius: 24,
-		padding: 18,
-		shadowColor: "#244438",
-		shadowOpacity: 0.1,
-		shadowRadius: 18,
-		shadowOffset: { width: 0, height: 10 },
-		elevation: 5,
-	},
-	cardTopRow: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		marginBottom: 14,
-	},
-	cardTitle: {
-		color: "#113C2C",
-		fontSize: 24,
-		fontWeight: "800",
-		fontFamily: Fonts.rounded,
-		maxWidth: "70%",
-	},
-	warningPill: {
-		backgroundColor: "#F05D4F",
-		color: "#FFFFFF",
-		fontWeight: "800",
-		fontSize: 14,
-		paddingHorizontal: 12,
-		paddingVertical: 6,
-		borderRadius: 12,
-	},
-	cardBody: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		gap: 16,
-	},
-	cardMetrics: {
-		flex: 1,
-		gap: 12,
-	},
-	progressRow: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 10,
-	},
-	progressTrack: {
-		flex: 1,
-		backgroundColor: "#F4F8F5",
-		borderWidth: 1.6,
-		borderColor: "#447764",
-		borderRadius: 999,
-		height: 19,
-		overflow: "hidden",
-	},
-	progressFill: {
-		height: "100%",
-		borderRadius: 999,
-	},
-	avatarCircle: {
-		width: 106,
-		height: 106,
-		borderRadius: 53,
-		backgroundColor: "#DCEFD8",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	avatarWarning: {
-		backgroundColor: "#ECF0DB",
-	},
-	primaryButton: {
-		marginTop: 16,
-		backgroundColor: "#7DBE66",
-		borderRadius: 999,
-		borderWidth: 4,
-		borderColor: "#F4F9F5",
-		paddingVertical: 13,
-		alignItems: "center",
-	},
-	primaryButtonText: {
-		color: "#FFFFFF",
-		fontSize: 22,
-		fontWeight: "800",
-		fontFamily: Fonts.rounded,
-	},
-});

@@ -4,13 +4,14 @@ import { Platform } from "react-native";
 
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { plantPalette } from "@/theme/plant-palette";
 
 export default function TabLayout() {
 	return (
 		<Tabs
 			screenOptions={{
-				tabBarActiveTintColor: "#A8DA92",
-				tabBarInactiveTintColor: "#D6EFC6",
+				tabBarActiveTintColor: plantPalette.tabActive,
+				tabBarInactiveTintColor: plantPalette.tabInactive,
 				headerShown: false,
 				tabBarButton: HapticTab,
 				tabBarLabelStyle: {
@@ -19,7 +20,7 @@ export default function TabLayout() {
 					marginBottom: Platform.OS === "ios" ? -2 : 4,
 				},
 				tabBarStyle: {
-					backgroundColor: "#0D3425",
+					backgroundColor: plantPalette.tabBarBg,
 					borderTopWidth: 0,
 					elevation: 0,
 					height: Platform.OS === "ios" ? 88 : 70,
