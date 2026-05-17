@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { Animated } from "react-native";
 
-import { HomeView, type Plant } from "./home-view";
+import { HomeView } from "./home-view";
+import type { Plant } from "../types";
 
 const PLANTS_MOCK: Plant[] = [
 	{ id: "ficus", name: "Ficus", waterLevel: 0.62, lightLevel: 0.5, mood: "happy", ctaLabel: "Arroser" },
