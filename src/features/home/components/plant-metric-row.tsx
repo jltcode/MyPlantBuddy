@@ -1,7 +1,7 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { View } from "react-native";
-import { XStack, YStack } from "tamagui";
+import { Text, XStack } from "tamagui";
 
+import { ProgressTrack } from "@/components/ui/progress-track";
 import { plantPalette } from "@/theme/plant-palette";
 
 export type PlantMetricRowProps = {
@@ -10,29 +10,20 @@ export type PlantMetricRowProps = {
 	fillColor: string;
 };
 
-/** Icône + barre de progression (eau ou lumière). */
+/** Icône + jauge + pourcentage (eau ou lumière). */
 export function PlantMetricRow({ icon, value, fillColor }: PlantMetricRowProps) {
-	const widthPercent = Math.max(8, value * 100);
 	return (
-		<XStack alignItems="center" gap="$3">
-			<Ionicons name={icon} size={18} color={plantPalette.iconTeal} />
-			<YStack
-				flex={1}
-				backgroundColor={plantPalette.progressTrackBg}
-				borderWidth={1.6}
-				borderColor={plantPalette.cardBorder}
-				borderRadius={999}
-				height={19}
-				overflow="hidden">
-				<View
-					style={{
-						width: `${widthPercent}%`,
-						height: "100%",
-						borderRadius: 999,
-						backgroundColor: fillColor,
-					}}
-				/>
-			</YStack>
+		<XStack alignItems="center" gap="$2.5">
+			<Ionicons name={icon} size={17} color={fillColor} />
+			<ProgressTrack
+				value={value}
+				fillColor={fillColor}
+				trackColor={plantPalette.surfaceSunken}
+				height={10}
+			/>
+			<Text fontSize={12} fontWeight="700" color={plantPalette.textSubtle} width={34} textAlign="right">
+				{Math.round(value * 100)} %
+			</Text>
 		</XStack>
 	);
 }

@@ -1,9 +1,15 @@
-import { createCenteredTabScreen } from "@/helpers/create-centered-tab-screen";
+import { useMemo } from "react";
 
-export const JournalScreen = createCenteredTabScreen(
-	{
-		title: "Journal",
-		description: "Historique des soins et rappels a venir.",
-	},
-	"JournalScreen",
-);
+import { useGarden } from "@/features/garden";
+
+import { computeJournalStats, groupCareEventsByDay } from "../domain/group-care-events";
+import { JournalView } from "./journal-view";
+
+export function JournalScreen() {
+	const { state, now } = useGarden();
+
+	const groups = useMemo(() => groupCareEventsByDay(state.history, now), [state.history, now]);
+	const stats = useMemo(() => computeJournalStats(state.history, now), [state.history, now]);
+
+	return <JournalView groups={groups} stats={stats} streakDays={state.player.streakDays} now={now} />;
+}

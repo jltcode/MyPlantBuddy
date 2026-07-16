@@ -1,23 +1,46 @@
-import { XStack, YStack } from "tamagui";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Text, XStack, YStack } from "tamagui";
 
 import { plantPalette } from "@/theme/plant-palette";
+
+import { formatWateringDeadline } from "@/features/garden/domain/plant-health";
+import type { PlantHealth, PlantSpecies } from "@/features/garden/types";
 
 import { PlantCardAvatar } from "./plant-card-avatar";
 import { PlantMetricRow } from "./plant-metric-row";
 
-import type { Plant } from "../types";
+export type PlantCardBodyProps = {
+	health: PlantHealth;
+	lightLevel: number;
+	species: PlantSpecies;
+};
 
-export type PlantCardBodyProps = Pick<Plant, "waterLevel" | "lightLevel" | "mood">;
+/** Rangée centrale : jauges + échéance à gauche, avatar à droite. */
+export function PlantCardBody({ health, lightLevel, species }: PlantCardBodyProps) {
+	const late = health.hoursUntilWatering <= 0;
 
-/** Rangée centrale : indicateurs à gauche, avatar à droite. */
-export function PlantCardBody({ waterLevel, lightLevel, mood }: PlantCardBodyProps) {
 	return (
-		<XStack alignItems="center" justifyContent="space-between" gap="$4">
-			<YStack flex={1} gap="$3">
-				<PlantMetricRow icon="water-outline" value={waterLevel} fillColor={plantPalette.waterBlue} />
-				<PlantMetricRow icon="sunny-outline" value={lightLevel} fillColor={plantPalette.sunYellow} />
+		<XStack alignItems="center" justifyContent="space-between" gap="$3.5">
+			<YStack flex={1} gap="$2.5">
+				<PlantMetricRow icon="water" value={health.waterLevel} fillColor={plantPalette.waterBlue} />
+				<PlantMetricRow icon="sunny" value={lightLevel} fillColor={plantPalette.sunYellow} />
+
+				<XStack alignItems="center" gap="$1.5">
+					<Ionicons
+						name={late ? "alert-circle" : "time-outline"}
+						size={14}
+						color={late ? plantPalette.moodCritical : plantPalette.textSubtle}
+					/>
+					<Text
+						fontSize={12.5}
+						fontWeight="700"
+						color={late ? plantPalette.moodCritical : plantPalette.textSubtle}>
+						{late ? formatWateringDeadline(health) : `Arrosage ${formatWateringDeadline(health).toLowerCase()}`}
+					</Text>
+				</XStack>
 			</YStack>
-			<PlantCardAvatar mood={mood} />
+
+			<PlantCardAvatar mood={health.mood} species={species} />
 		</XStack>
 	);
 }

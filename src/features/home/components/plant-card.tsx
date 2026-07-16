@@ -1,35 +1,37 @@
-import { YStack } from "tamagui";
-
+import { SurfaceCard } from "@/components/ui/surface-card";
 import { plantPalette } from "@/theme/plant-palette";
+
+import { canWater } from "@/features/garden/domain/plant-health";
+import type { PlantWithHealth } from "@/features/garden/state/garden-provider";
 
 import { PlantCardBody } from "./plant-card-body";
 import { PlantCardCta } from "./plant-card-cta";
 import { PlantCardHeader } from "./plant-card-header";
 
-import type { Plant } from "../types";
-
 export type PlantCardProps = {
-	plant: Plant;
-	featured?: boolean;
+	plant: PlantWithHealth;
+	xpReward: number;
+	onWater: (plantId: string) => void;
 };
 
-/** Carte plante : en-tête, corps (métriques + avatar), CTA optionnel. */
-export function PlantCard({ plant, featured }: PlantCardProps) {
-	const showCta = Boolean(featured && plant.ctaLabel);
+/** Carte plante : en-tête, jauges + avatar, action d’arrosage. */
+export function PlantCard({ plant, xpReward, onWater }: PlantCardProps) {
+	const needsCare = plant.health.mood !== "thriving";
 
 	return (
-		<YStack
-			backgroundColor={plantPalette.cardSurface}
-			borderRadius={24}
-			padding="$4"
-			shadowColor={plantPalette.shadow}
-			shadowOpacity={0.1}
-			shadowRadius={18}
-			shadowOffset={{ width: 0, height: 10 }}
-			elevation={5}>
-			<PlantCardHeader name={plant.name} warningLabel={plant.warningLabel} />
-			<PlantCardBody waterLevel={plant.waterLevel} lightLevel={plant.lightLevel} mood={plant.mood} />
-			{showCta && plant.ctaLabel ? <PlantCardCta label={plant.ctaLabel} /> : null}
-		</YStack>
+		<SurfaceCard
+			gap="$3"
+			// Le liseré ne s’allume que sur les plantes qui réclament un geste :
+			// l’attention doit se porter là, pas sur tout le jardin.
+			borderColor={needsCare ? plantPalette.moodThirsty : plantPalette.hairline}
+			borderWidth={needsCare ? 1.5 : 1}>
+			<PlantCardHeader name={plant.name} room={plant.room} mood={plant.health.mood} />
+			<PlantCardBody health={plant.health} lightLevel={plant.lightLevel} species={plant.species} />
+			<PlantCardCta
+				enabled={canWater(plant.health)}
+				xpReward={xpReward}
+				onPress={() => onWater(plant.id)}
+			/>
+		</SurfaceCard>
 	);
 }

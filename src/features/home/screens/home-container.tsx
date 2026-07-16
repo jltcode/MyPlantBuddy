@@ -1,23 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Animated } from "react-native";
 
-import { HomeView } from "./home-view";
-import type { Plant } from "../types";
+import { useGarden } from "@/features/garden";
+import { xpForCare } from "@/features/garden/domain/level";
 
-const PLANTS_MOCK: Plant[] = [
-	{ id: "ficus", name: "Ficus", waterLevel: 0.62, lightLevel: 0.5, mood: "happy", ctaLabel: "Arroser" },
-	{
-		id: "monstera",
-		name: "Monstera",
-		waterLevel: 0.72,
-		lightLevel: 0.55,
-		mood: "warning",
-		warningLabel: "SOS Eau !",
-	},
-	{ id: "succulente", name: "Succulente", waterLevel: 0.4, lightLevel: 0.35, mood: "happy" },
-];
+import { HomeView } from "./home-view";
 
 export function HomeScreen() {
+	const { state, plants, level, plantsNeedingCare, now, waterPlant, dismissReward } = useGarden();
 	const entranceAnim = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
@@ -28,17 +18,35 @@ export function HomeScreen() {
 		}).start();
 	}, [entranceAnim]);
 
-	const contentAnimatedStyle = {
-		opacity: entranceAnim,
-		transform: [
-			{
-				translateY: entranceAnim.interpolate({
-					inputRange: [0, 1],
-					outputRange: [22, 0],
-				}),
-			},
-		],
-	};
+	const contentAnimatedStyle = useMemo(
+		() => ({
+			opacity: entranceAnim,
+			transform: [
+				{ translateY: entranceAnim.interpolate({ inputRange: [0, 1], outputRange: [22, 0] }) },
+			],
+		}),
+		[entranceAnim],
+	);
 
-	return <HomeView plants={PLANTS_MOCK} contentAnimatedStyle={contentAnimatedStyle} />;
+	// Les plantes les plus assoiffées remontent : la liste répond à l’urgence,
+	// pas à un ordre d’insertion arbitraire.
+	const sortedPlants = useMemo(
+		() => [...plants].sort((a, b) => a.health.waterLevel - b.health.waterLevel),
+		[plants],
+	);
+
+	return (
+		<HomeView
+			player={state.player}
+			level={level}
+			plants={sortedPlants}
+			plantsNeedingCare={plantsNeedingCare}
+			xpReward={xpForCare("water", state.player)}
+			now={now}
+			reward={state.lastReward}
+			onWater={waterPlant}
+			onDismissReward={dismissReward}
+			contentAnimatedStyle={contentAnimatedStyle}
+		/>
+	);
 }

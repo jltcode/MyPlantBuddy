@@ -1,35 +1,39 @@
-import { Text, XStack } from "tamagui";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Text, XStack, YStack } from "tamagui";
 
-import { Fonts } from "@/theme/theme";
 import { plantPalette } from "@/theme/plant-palette";
+import { Fonts } from "@/theme/theme";
 
-import type { Plant } from "../types";
+import type { PlantMood } from "@/features/garden/types";
 
-export type PlantCardHeaderProps = Pick<Plant, "name" | "warningLabel">;
+import { PlantMoodBadge } from "./plant-mood-badge";
 
-export function PlantCardHeader({ name, warningLabel }: PlantCardHeaderProps) {
+export type PlantCardHeaderProps = {
+	name: string;
+	room: string;
+	mood: PlantMood;
+};
+
+export function PlantCardHeader({ name, room, mood }: PlantCardHeaderProps) {
 	return (
-		<XStack alignItems="center" justifyContent="space-between" marginBottom="$3.5">
-			<Text
-				color={plantPalette.gardenTextDeep}
-				fontSize={24}
-				fontWeight="800"
-				fontFamily={Fonts.rounded}
-				maxWidth="70%">
-				{name}
-			</Text>
-			{warningLabel ? (
+		<XStack alignItems="flex-start" justifyContent="space-between" gap="$2">
+			<YStack flex={1} gap="$1">
 				<Text
-					backgroundColor={plantPalette.warningRed}
-					color="#FFFFFF"
+					color={plantPalette.gardenTextDeep}
+					fontSize={21}
 					fontWeight="800"
-					fontSize={14}
-					paddingHorizontal="$3"
-					paddingVertical="$1.5"
-					borderRadius={12}>
-					{warningLabel}
+					fontFamily={Fonts.rounded}
+					numberOfLines={1}>
+					{name}
 				</Text>
-			) : null}
+				<XStack alignItems="center" gap="$1">
+					<Ionicons name="location-outline" size={13} color={plantPalette.textSubtle} />
+					<Text fontSize={13} fontWeight="600" color={plantPalette.textSubtle}>
+						{room}
+					</Text>
+				</XStack>
+			</YStack>
+			<PlantMoodBadge mood={mood} />
 		</XStack>
 	);
 }

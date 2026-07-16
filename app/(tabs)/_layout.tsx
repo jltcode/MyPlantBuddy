@@ -1,9 +1,9 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 
 import { HapticTab } from "@/components/haptic-tab";
-import { IconSymbol } from "@/components/ui/icon-symbol";
 import { plantPalette } from "@/theme/plant-palette";
 
 export default function TabLayout() {
@@ -26,6 +26,9 @@ export default function TabLayout() {
 					height: Platform.OS === "ios" ? 88 : 70,
 					paddingTop: 10,
 					paddingBottom: Platform.OS === "ios" ? 22 : 10,
+					borderTopLeftRadius: 22,
+					borderTopRightRadius: 22,
+					position: "absolute",
 				},
 			}}
 		>
@@ -33,28 +36,36 @@ export default function TabLayout() {
 				name="index"
 				options={{
 					title: "Accueil",
-					tabBarIcon: ({ color }) => <IconSymbol size={24} name="house.fill" color={color} />,
+					tabBarIcon: ({ color, focused }) => (
+						<Ionicons size={23} name={focused ? "leaf" : "leaf-outline"} color={color} />
+					),
 				}}
 			/>
 			<Tabs.Screen
 				name="journal"
 				options={{
 					title: "Journal",
-					tabBarIcon: ({ color }) => <IconSymbol size={24} name="book.closed.fill" color={color} />,
+					tabBarIcon: ({ color, focused }) => (
+						<Ionicons size={23} name={focused ? "book" : "book-outline"} color={color} />
+					),
 				}}
 			/>
 			<Tabs.Screen
 				name="decouvrir"
 				options={{
 					title: "Découvrir",
-					tabBarIcon: ({ color }) => <IconSymbol size={24} name="magnifyingglass" color={color} />,
+					tabBarIcon: ({ color, focused }) => (
+						<Ionicons size={23} name={focused ? "compass" : "compass-outline"} color={color} />
+					),
 				}}
 			/>
 			<Tabs.Screen
 				name="profil"
 				options={{
 					title: "Profil",
-					tabBarIcon: ({ color }) => <IconSymbol size={24} name="person.fill" color={color} />,
+					tabBarIcon: ({ color, focused }) => (
+						<Ionicons size={23} name={focused ? "person" : "person-outline"} color={color} />
+					),
 				}}
 			/>
 			<Tabs.Screen

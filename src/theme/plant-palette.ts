@@ -29,6 +29,36 @@ export const plantPalette = {
 	roundButtonIcon: "#174D38",
 	statusBannerBg: "#E3EFE6",
 	shadow: "#244438",
+
+	/* — Surfaces & texte — */
+	surfaceElevated: "#FFFFFF",
+	surfaceSunken: "#DCEBE1",
+	hairline: "#CFE2D6",
+	textOnDark: "#FFFFFF",
+	textSubtle: "#6B8F7E",
+
+	/* — Gamification : XP, niveau, série — */
+	xpGold: "#F2B138",
+	xpGoldSoft: "#FCEBC6",
+	xpTrack: "#CFE4D7",
+	levelInk: "#0D3425",
+	streakFlame: "#F97B3D",
+	streakSoft: "#FDE3D3",
+
+	/* — Quêtes — */
+	questDone: "#7DBE66",
+	questTodo: "#B7D3C3",
+
+	/* — Badges (paliers) — */
+	badgeLocked: "#C6D9CD",
+	badgeBronze: "#C98A5B",
+	badgeSilver: "#9BAEB6",
+	badgeGold: "#EDB238",
+
+	/* — États de santé plante — */
+	moodThriving: "#5BA97F",
+	moodThirsty: "#E8A33D",
+	moodCritical: "#F05D4F",
 } as const;
 
 export type PlantPalette = typeof plantPalette;

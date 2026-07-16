@@ -5,6 +5,7 @@ import 'react-native-reanimated';
 import { TamaguiProvider } from 'tamagui';
 
 import { QueryProvider } from '@/core/query';
+import { GardenProvider } from '@/features/garden';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 import tamaguiConfig from '../tamagui.config';
@@ -20,10 +21,12 @@ export default function RootLayout() {
     <QueryProvider>
       <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-          </Stack>
+          <GardenProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+            </Stack>
+          </GardenProvider>
           <StatusBar style="auto" />
         </ThemeProvider>
       </TamaguiProvider>

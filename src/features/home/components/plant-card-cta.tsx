@@ -1,31 +1,63 @@
-import { Button, Text } from "tamagui";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Button, Text, XStack } from "tamagui";
 
-import { Fonts } from "@/theme/theme";
 import { plantPalette } from "@/theme/plant-palette";
+import { Fonts } from "@/theme/theme";
 
 export type PlantCardCtaProps = {
-	label: string;
+	/** `false` quand la réserve est encore pleine — on n’arrose pas deux fois. */
+	enabled: boolean;
+	xpReward: number;
+	onPress: () => void;
 };
 
-/** CTA principal de la carte (ex. « Arroser ») — affiché uniquement si le parent décide de le montrer. */
-export function PlantCardCta({ label }: PlantCardCtaProps) {
+/**
+ * CTA d’arrosage. Désactivé, il explique pourquoi plutôt que de disparaître :
+ * l’utilisateur comprend l’état de la plante au lieu de chercher le bouton.
+ */
+export function PlantCardCta({ enabled, xpReward, onPress }: PlantCardCtaProps) {
+	if (!enabled) {
+		return (
+			<XStack
+				marginTop="$3.5"
+				backgroundColor={plantPalette.surfaceSunken}
+				borderRadius={999}
+				minHeight={48}
+				alignItems="center"
+				justifyContent="center"
+				gap="$2">
+				<Ionicons name="checkmark-circle" size={18} color={plantPalette.moodThriving} />
+				<Text fontSize={15} fontWeight="700" fontFamily={Fonts.rounded} color={plantPalette.gardenDescription}>
+					Réserve pleine
+				</Text>
+			</XStack>
+		);
+	}
+
 	return (
 		<Button
 			unstyled
-			marginTop="$4"
+			marginTop="$3.5"
 			backgroundColor={plantPalette.primaryGreen}
 			borderRadius={999}
-			borderWidth={4}
-			borderColor={plantPalette.primaryGreenBorder}
-			minHeight={58}
+			minHeight={52}
 			alignItems="center"
 			justifyContent="center"
+			flexDirection="row"
+			gap="$2"
 			paddingHorizontal="$4"
-			paddingVertical="$3"
-			pressStyle={{ opacity: 0.92 }}>
-			<Text color="#FFFFFF" fontSize={22} lineHeight={28} fontWeight="800" fontFamily={Fonts.rounded}>
-				{label}
+			pressStyle={{ opacity: 0.9, scale: 0.97 }}
+			accessibilityRole="button"
+			onPress={onPress}>
+			<Ionicons name="water" size={19} color={plantPalette.textOnDark} />
+			<Text fontSize={17} fontWeight="800" fontFamily={Fonts.rounded} color={plantPalette.textOnDark}>
+				Arroser
 			</Text>
+			<XStack backgroundColor="#00000022" borderRadius={999} paddingHorizontal="$2" paddingVertical={2}>
+				<Text fontSize={12} fontWeight="800" color={plantPalette.textOnDark}>
+					+{xpReward} XP
+				</Text>
+			</XStack>
 		</Button>
 	);
 }
