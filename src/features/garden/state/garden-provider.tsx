@@ -19,6 +19,8 @@ export type GardenContextValue = {
 	level: LevelProgress;
 	plantsNeedingCare: number;
 	waterPlant: (plantId: string) => void;
+	/** Enregistre la photo + son avatar transformé pour une plante. */
+	capturePlantAvatar: (plantId: string, photoUri: string, transformedUri: string) => void;
 	dismissReward: () => void;
 };
 
@@ -41,6 +43,14 @@ export function GardenProvider({ children }: { children: ReactNode }) {
 		[dispatch],
 	);
 
+	const capturePlantAvatar = useCallback(
+		(plantId: string, photoUri: string, transformedUri: string) => {
+			void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+			dispatch({ type: "capture-avatar", plantId, photoUri, transformedUri, now: Date.now() });
+		},
+		[dispatch],
+	);
+
 	const dismissReward = useCallback(() => dispatch({ type: "dismiss-reward" }), [dispatch]);
 
 	const value = useMemo<GardenContextValue>(() => {
@@ -53,9 +63,10 @@ export function GardenProvider({ children }: { children: ReactNode }) {
 			level: levelProgressFromXp(state.player.xp),
 			plantsNeedingCare: countPlantsNeedingCare(state.plants, now),
 			waterPlant,
+			capturePlantAvatar,
 			dismissReward,
 		};
-	}, [state, now, waterPlant, dismissReward]);
+	}, [state, now, waterPlant, capturePlantAvatar, dismissReward]);
 
 	return <GardenContext.Provider value={value}>{children}</GardenContext.Provider>;
 }

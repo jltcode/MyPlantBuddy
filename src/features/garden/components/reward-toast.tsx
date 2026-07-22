@@ -29,6 +29,9 @@ function headline(reward: RewardFeedback): { icon: keyof typeof Ionicons.glyphMa
 	const [quest] = reward.questsCompleted;
 	if (quest) return { icon: "checkmark-circle", text: `Quête terminée : ${quest.label}` };
 
+	if (reward.action === "photo") {
+		return { icon: "camera", text: `L’avatar de ${reward.plantName} a évolué !` };
+	}
 	return { icon: "water", text: `${reward.plantName} est arrosé` };
 }
 

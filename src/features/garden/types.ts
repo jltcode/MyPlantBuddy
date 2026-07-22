@@ -2,6 +2,22 @@
 
 export type PlantSpecies = "ficus" | "monstera" | "succulent" | "pothos" | "calathea";
 
+/**
+ * Avatar généré depuis une vraie photo de la plante. Tant que le backend Nest
+ * n’existe pas, `transformedUri` pointe sur la photo stylisée côté client ;
+ * plus tard ce sera l’URL de l’image générée par l’IA.
+ */
+export type PlantAvatar = {
+	/** Photo originale prise par l’utilisateur. */
+	photoUri: string;
+	/** Image affichée comme avatar (photo transformée). */
+	transformedUri: string;
+	/** Timestamp (ms) de la capture. */
+	capturedAt: number;
+	/** Niveau du joueur au moment de la transformation — sert à détecter l’avatar périmé. */
+	level: number;
+};
+
 /** Rythme d’arrosage attendu, exprimé en heures entre deux arrosages. */
 export type Plant = {
 	id: string;
@@ -14,6 +30,8 @@ export type Plant = {
 	wateringIntervalHours: number;
 	/** Timestamp (ms) du dernier arrosage. */
 	lastWateredAt: number;
+	/** `null` tant qu’aucune photo n’a été transformée. */
+	avatar: PlantAvatar | null;
 };
 
 /** État de santé dérivé du temps écoulé depuis le dernier arrosage. */
@@ -27,7 +45,7 @@ export type PlantHealth = {
 	hoursUntilWatering: number;
 };
 
-export type CareAction = "water" | "light" | "repot" | "diagnose";
+export type CareAction = "water" | "light" | "repot" | "diagnose" | "photo";
 
 /** Une entrée du journal de soins. */
 export type CareEvent = {
@@ -80,6 +98,8 @@ export type Player = {
 export type RewardFeedback = {
 	id: string;
 	plantName: string;
+	/** Geste célébré — le toast adapte son message par défaut. */
+	action: CareAction;
 	xpGained: number;
 	/** Niveau atteint si le soin a fait franchir un palier, sinon `null`. */
 	leveledUpTo: number | null;

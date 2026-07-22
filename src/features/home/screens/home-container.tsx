@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated } from "react-native";
 
 import { useGarden } from "@/features/garden";
@@ -7,8 +7,12 @@ import { xpForCare } from "@/features/garden/domain/level";
 import { HomeView } from "./home-view";
 
 export function HomeScreen() {
-	const { state, plants, level, plantsNeedingCare, now, waterPlant, dismissReward } = useGarden();
+	const { state, plants, level, plantsNeedingCare, now, waterPlant, capturePlantAvatar, dismissReward } =
+		useGarden();
 	const entranceAnim = useRef(new Animated.Value(0)).current;
+
+	/** Plante ouverte dans le studio photo, `null` = studio fermé. */
+	const [studioPlantId, setStudioPlantId] = useState<string | null>(null);
 
 	useEffect(() => {
 		Animated.timing(entranceAnim, {
@@ -35,6 +39,16 @@ export function HomeScreen() {
 		[plants],
 	);
 
+	// Relu depuis `plants` (et non figé à l’ouverture) : le studio affiche
+	// toujours l’avatar le plus frais, y compris juste après une capture.
+	const studioPlant = useMemo(
+		() => plants.find((plant) => plant.id === studioPlantId) ?? null,
+		[plants, studioPlantId],
+	);
+
+	const openStudio = useCallback((plantId: string) => setStudioPlantId(plantId), []);
+	const closeStudio = useCallback(() => setStudioPlantId(null), []);
+
 	return (
 		<HomeView
 			player={state.player}
@@ -42,9 +56,14 @@ export function HomeScreen() {
 			plants={sortedPlants}
 			plantsNeedingCare={plantsNeedingCare}
 			xpReward={xpForCare("water", state.player)}
+			photoXpReward={xpForCare("photo", state.player)}
 			now={now}
 			reward={state.lastReward}
+			studioPlant={studioPlant}
 			onWater={waterPlant}
+			onOpenStudio={openStudio}
+			onCloseStudio={closeStudio}
+			onAvatarCaptured={capturePlantAvatar}
 			onDismissReward={dismissReward}
 			contentAnimatedStyle={contentAnimatedStyle}
 		/>

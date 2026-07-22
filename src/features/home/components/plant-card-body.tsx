@@ -4,7 +4,7 @@ import { Text, XStack, YStack } from "tamagui";
 import { plantPalette } from "@/theme/plant-palette";
 
 import { formatWateringDeadline } from "@/features/garden/domain/plant-health";
-import type { PlantHealth, PlantSpecies } from "@/features/garden/types";
+import type { PlantAvatar, PlantHealth, PlantSpecies } from "@/features/garden/types";
 
 import { PlantCardAvatar } from "./plant-card-avatar";
 import { PlantMetricRow } from "./plant-metric-row";
@@ -13,10 +13,22 @@ export type PlantCardBodyProps = {
 	health: PlantHealth;
 	lightLevel: number;
 	species: PlantSpecies;
+	avatar: PlantAvatar | null;
+	level: number;
+	now: number;
+	onPressAvatar: () => void;
 };
 
 /** Rangée centrale : jauges + échéance à gauche, avatar à droite. */
-export function PlantCardBody({ health, lightLevel, species }: PlantCardBodyProps) {
+export function PlantCardBody({
+	health,
+	lightLevel,
+	species,
+	avatar,
+	level,
+	now,
+	onPressAvatar,
+}: PlantCardBodyProps) {
 	const late = health.hoursUntilWatering <= 0;
 
 	return (
@@ -40,7 +52,14 @@ export function PlantCardBody({ health, lightLevel, species }: PlantCardBodyProp
 				</XStack>
 			</YStack>
 
-			<PlantCardAvatar mood={health.mood} species={species} />
+			<PlantCardAvatar
+				mood={health.mood}
+				species={species}
+				avatar={avatar}
+				level={level}
+				now={now}
+				onPress={onPressAvatar}
+			/>
 		</XStack>
 	);
 }

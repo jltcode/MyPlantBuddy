@@ -28,6 +28,13 @@
     "plugins": [
       "expo-router",
       [
+        "expo-image-picker",
+        {
+          "cameraPermission": "myPlantBuddy utilise la caméra pour photographier tes plantes et générer leur avatar.",
+          "photosPermission": "myPlantBuddy accède à tes photos pour créer l'avatar de tes plantes."
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",

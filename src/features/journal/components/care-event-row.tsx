@@ -12,6 +12,7 @@ const ACTION_STYLE: Record<CareAction, { icon: keyof typeof Ionicons.glyphMap; c
 	light: { icon: "sunny", color: plantPalette.sunYellow, verb: "Exposition ajustée" },
 	repot: { icon: "flower", color: plantPalette.primaryGreen, verb: "Rempotage" },
 	diagnose: { icon: "medkit", color: plantPalette.iconTeal, verb: "Diagnostic" },
+	photo: { icon: "camera", color: plantPalette.xpGold, verb: "Portrait transformé" },
 };
 
 export type CareEventRowProps = {

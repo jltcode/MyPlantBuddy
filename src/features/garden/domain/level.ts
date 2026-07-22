@@ -72,6 +72,7 @@ export const XP_REWARDS = {
 	light: 8,
 	repot: 40,
 	diagnose: 10,
+	photo: 25,
 } as const;
 
 /** Bonus de série : +10 % d’XP par jour consécutif, plafonné à +50 %. */

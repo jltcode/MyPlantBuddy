@@ -18,6 +18,7 @@ export function createMockGarden(now: number): GardenState {
 			lightLevel: 0.55,
 			wateringIntervalHours: 7 * 24,
 			lastWateredAt: now - 6.6 * DAY,
+			avatar: null,
 		},
 		{
 			id: "ficus",
@@ -27,6 +28,7 @@ export function createMockGarden(now: number): GardenState {
 			lightLevel: 0.5,
 			wateringIntervalHours: 6 * 24,
 			lastWateredAt: now - 2.3 * DAY,
+			avatar: null,
 		},
 		{
 			id: "calathea",
@@ -36,6 +38,7 @@ export function createMockGarden(now: number): GardenState {
 			lightLevel: 0.3,
 			wateringIntervalHours: 4 * 24,
 			lastWateredAt: now - 3.4 * DAY,
+			avatar: null,
 		},
 		{
 			id: "succulente",
@@ -45,6 +48,7 @@ export function createMockGarden(now: number): GardenState {
 			lightLevel: 0.85,
 			wateringIntervalHours: 21 * 24,
 			lastWateredAt: now - 4 * DAY,
+			avatar: null,
 		},
 	];
 

@@ -1,2 +1,13 @@
 export { aiClient, createAiClient } from "./ai-client";
-export type { AiClient, PlantInsightInput, PlantInsightOutput } from "./ai.types";
+export {
+	transformPlantPhoto,
+	type TransformPlantPhotoInput,
+	type TransformPlantPhotoResult,
+} from "./avatar-transform";
+export type {
+	AiClient,
+	AvatarTransformInput,
+	AvatarTransformOutput,
+	PlantInsightInput,
+	PlantInsightOutput,
+} from "./ai.types";
